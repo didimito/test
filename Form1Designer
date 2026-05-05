@@ -1,0 +1,543 @@
+namespace Sinematek_Foto_Poster
+{
+    partial class Form1
+    {
+        private System.ComponentModel.IContainer components = null;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+                components.Dispose();
+            base.Dispose(disposing);
+        }
+
+        private void InitializeComponent()
+        {
+            pictureBox1 = new PictureBox();
+            button1 = new Button();
+            btnAdd = new Button();
+            btnUpdate = new Button();
+            btnDelete = new Button();
+            groupBox3 = new GroupBox();
+            txtSearchLeft = new TextBox();
+            groupBox4 = new GroupBox();
+            txtNoPenempatan = new TextBox();
+            groupBox5 = new GroupBox();
+            txtJudulFilm = new TextBox();
+            groupBox6 = new GroupBox();
+            txtProduksi = new TextBox();
+            groupBox7 = new GroupBox();
+            txtTahunProduksi = new TextBox();
+            groupBox8 = new GroupBox();
+            txtNegara = new TextBox();
+            groupBox9 = new GroupBox();
+            txtBahasa = new TextBox();
+            groupBox11 = new GroupBox();
+            txtWarna = new TextBox();
+            groupBox12 = new GroupBox();
+            txtJenisFilm = new TextBox();
+            groupBox13 = new GroupBox();
+            txtUkuranReel = new TextBox();
+            groupBox14 = new GroupBox();
+            txtJumlahReel = new TextBox();
+            groupBox15 = new GroupBox();
+            txtPanjangReel = new TextBox();
+            groupBox16 = new GroupBox();
+            txtMasaPutar = new TextBox();
+            groupBox17 = new GroupBox();
+            txtRak = new TextBox();
+            groupBox18 = new GroupBox();
+            txtCopy = new TextBox();
+            groupBox19 = new GroupBox();
+            txtKeterangan = new TextBox();
+            dataGridViewSearchResults = new DataGridView();
+            button3 = new Button();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            groupBox3.SuspendLayout();
+            groupBox4.SuspendLayout();
+            groupBox5.SuspendLayout();
+            groupBox6.SuspendLayout();
+            groupBox7.SuspendLayout();
+            groupBox8.SuspendLayout();
+            groupBox9.SuspendLayout();
+            groupBox11.SuspendLayout();
+            groupBox12.SuspendLayout();
+            groupBox13.SuspendLayout();
+            groupBox14.SuspendLayout();
+            groupBox15.SuspendLayout();
+            groupBox16.SuspendLayout();
+            groupBox17.SuspendLayout();
+            groupBox18.SuspendLayout();
+            groupBox19.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewSearchResults).BeginInit();
+            SuspendLayout();
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Location = new Point(980, 90);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(401, 524);
+            pictureBox1.TabIndex = 0;
+            pictureBox1.TabStop = false;
+            pictureBox1.Click += pictureBox1_Click;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(526, 50);
+            button1.Name = "button1";
+            button1.Size = new Size(94, 29);
+            button1.TabIndex = 7;
+            button1.Text = "Search";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // btnAdd
+            // 
+            btnAdd.Location = new Point(624, 50);
+            btnAdd.Name = "btnAdd";
+            btnAdd.Size = new Size(100, 29);
+            btnAdd.TabIndex = 8;
+            btnAdd.Text = "Add Film";
+            btnAdd.UseVisualStyleBackColor = true;
+            btnAdd.Click += btnAdd_Click;
+            // 
+            // btnUpdate
+            // 
+            btnUpdate.Location = new Point(730, 50);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new Size(100, 29);
+            btnUpdate.TabIndex = 9;
+            btnUpdate.Text = "Update";
+            btnUpdate.UseVisualStyleBackColor = true;
+            btnUpdate.Click += btnUpdate_Click;
+            // 
+            // btnDelete
+            // 
+            btnDelete.Location = new Point(836, 50);
+            btnDelete.Name = "btnDelete";
+            btnDelete.Size = new Size(100, 29);
+            btnDelete.TabIndex = 10;
+            btnDelete.Text = "Delete";
+            btnDelete.UseVisualStyleBackColor = true;
+            btnDelete.Click += btnDelete_Click;
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(txtSearchLeft);
+            groupBox3.Location = new Point(80, 36);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(413, 43);
+            groupBox3.TabIndex = 13;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Pencarian Judul Film";
+            // 
+            // txtSearchLeft
+            // 
+            txtSearchLeft.BorderStyle = BorderStyle.None;
+            txtSearchLeft.Location = new Point(6, 15);
+            txtSearchLeft.Name = "txtSearchLeft";
+            txtSearchLeft.Size = new Size(400, 20);
+            txtSearchLeft.TabIndex = 0;
+            // 
+            // groupBox4
+            // 
+            groupBox4.Controls.Add(txtNoPenempatan);
+            groupBox4.Location = new Point(73, 324);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(419, 43);
+            groupBox4.TabIndex = 15;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Nomor Penempatan";
+            // 
+            // txtNoPenempatan
+            // 
+            txtNoPenempatan.Location = new Point(6, 15);
+            txtNoPenempatan.Name = "txtNoPenempatan";
+            txtNoPenempatan.ReadOnly = true;
+            txtNoPenempatan.Size = new Size(407, 27);
+            txtNoPenempatan.TabIndex = 0;
+            // 
+            // groupBox5
+            // 
+            groupBox5.Controls.Add(txtJudulFilm);
+            groupBox5.Location = new Point(73, 373);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Size = new Size(419, 43);
+            groupBox5.TabIndex = 16;
+            groupBox5.TabStop = false;
+            groupBox5.Text = "Judul Film";
+            // 
+            // txtJudulFilm
+            // 
+            txtJudulFilm.Location = new Point(6, 15);
+            txtJudulFilm.Name = "txtJudulFilm";
+            txtJudulFilm.ReadOnly = true;
+            txtJudulFilm.Size = new Size(407, 27);
+            txtJudulFilm.TabIndex = 0;
+            // 
+            // groupBox6
+            // 
+            groupBox6.Controls.Add(txtProduksi);
+            groupBox6.Location = new Point(73, 422);
+            groupBox6.Name = "groupBox6";
+            groupBox6.Size = new Size(419, 43);
+            groupBox6.TabIndex = 17;
+            groupBox6.TabStop = false;
+            groupBox6.Text = "Produksi";
+            groupBox6.Enter += groupBox6_Enter;
+            // 
+            // txtProduksi
+            // 
+            txtProduksi.Location = new Point(6, 15);
+            txtProduksi.Name = "txtProduksi";
+            txtProduksi.ReadOnly = true;
+            txtProduksi.Size = new Size(407, 27);
+            txtProduksi.TabIndex = 0;
+            // 
+            // groupBox7
+            // 
+            groupBox7.Controls.Add(txtTahunProduksi);
+            groupBox7.Location = new Point(73, 475);
+            groupBox7.Name = "groupBox7";
+            groupBox7.Size = new Size(419, 43);
+            groupBox7.TabIndex = 18;
+            groupBox7.TabStop = false;
+            groupBox7.Text = "Tahun Produksi";
+            // 
+            // txtTahunProduksi
+            // 
+            txtTahunProduksi.Location = new Point(6, 15);
+            txtTahunProduksi.Name = "txtTahunProduksi";
+            txtTahunProduksi.ReadOnly = true;
+            txtTahunProduksi.Size = new Size(407, 27);
+            txtTahunProduksi.TabIndex = 0;
+            // 
+            // groupBox8
+            // 
+            groupBox8.Controls.Add(txtNegara);
+            groupBox8.Location = new Point(73, 528);
+            groupBox8.Name = "groupBox8";
+            groupBox8.Size = new Size(419, 43);
+            groupBox8.TabIndex = 19;
+            groupBox8.TabStop = false;
+            groupBox8.Text = "Negara";
+            // 
+            // txtNegara
+            // 
+            txtNegara.Location = new Point(6, 15);
+            txtNegara.Name = "txtNegara";
+            txtNegara.ReadOnly = true;
+            txtNegara.Size = new Size(407, 27);
+            txtNegara.TabIndex = 0;
+            // 
+            // groupBox9
+            // 
+            groupBox9.Controls.Add(txtBahasa);
+            groupBox9.Location = new Point(73, 581);
+            groupBox9.Name = "groupBox9";
+            groupBox9.Size = new Size(419, 43);
+            groupBox9.TabIndex = 20;
+            groupBox9.TabStop = false;
+            groupBox9.Text = "Bahasa";
+            // 
+            // txtBahasa
+            // 
+            txtBahasa.Location = new Point(6, 15);
+            txtBahasa.Name = "txtBahasa";
+            txtBahasa.ReadOnly = true;
+            txtBahasa.Size = new Size(407, 27);
+            txtBahasa.TabIndex = 0;
+            // 
+            // groupBox11
+            // 
+            groupBox11.Controls.Add(txtWarna);
+            groupBox11.Location = new Point(73, 630);
+            groupBox11.Name = "groupBox11";
+            groupBox11.Size = new Size(419, 43);
+            groupBox11.TabIndex = 21;
+            groupBox11.TabStop = false;
+            groupBox11.Text = "Warna";
+            // 
+            // txtWarna
+            // 
+            txtWarna.Location = new Point(6, 15);
+            txtWarna.Name = "txtWarna";
+            txtWarna.ReadOnly = true;
+            txtWarna.Size = new Size(407, 27);
+            txtWarna.TabIndex = 0;
+            // 
+            // groupBox12
+            // 
+            groupBox12.Controls.Add(txtJenisFilm);
+            groupBox12.Location = new Point(73, 679);
+            groupBox12.Name = "groupBox12";
+            groupBox12.Size = new Size(419, 43);
+            groupBox12.TabIndex = 22;
+            groupBox12.TabStop = false;
+            groupBox12.Text = "Jenis Film";
+            // 
+            // txtJenisFilm
+            // 
+            txtJenisFilm.Location = new Point(6, 15);
+            txtJenisFilm.Name = "txtJenisFilm";
+            txtJenisFilm.ReadOnly = true;
+            txtJenisFilm.Size = new Size(407, 27);
+            txtJenisFilm.TabIndex = 0;
+            // 
+            // groupBox13
+            // 
+            groupBox13.Controls.Add(txtUkuranReel);
+            groupBox13.Location = new Point(73, 728);
+            groupBox13.Name = "groupBox13";
+            groupBox13.Size = new Size(419, 43);
+            groupBox13.TabIndex = 23;
+            groupBox13.TabStop = false;
+            groupBox13.Text = "Ukuran Reel";
+            // 
+            // txtUkuranReel
+            // 
+            txtUkuranReel.Location = new Point(6, 15);
+            txtUkuranReel.Name = "txtUkuranReel";
+            txtUkuranReel.ReadOnly = true;
+            txtUkuranReel.Size = new Size(407, 27);
+            txtUkuranReel.TabIndex = 0;
+            // 
+            // groupBox14
+            // 
+            groupBox14.Controls.Add(txtJumlahReel);
+            groupBox14.Location = new Point(73, 777);
+            groupBox14.Name = "groupBox14";
+            groupBox14.Size = new Size(419, 43);
+            groupBox14.TabIndex = 24;
+            groupBox14.TabStop = false;
+            groupBox14.Text = "Jumlah Reel";
+            // 
+            // txtJumlahReel
+            // 
+            txtJumlahReel.Location = new Point(6, 15);
+            txtJumlahReel.Name = "txtJumlahReel";
+            txtJumlahReel.ReadOnly = true;
+            txtJumlahReel.Size = new Size(407, 27);
+            txtJumlahReel.TabIndex = 0;
+            // 
+            // groupBox15
+            // 
+            groupBox15.Controls.Add(txtPanjangReel);
+            groupBox15.Location = new Point(74, 826);
+            groupBox15.Name = "groupBox15";
+            groupBox15.Size = new Size(419, 43);
+            groupBox15.TabIndex = 25;
+            groupBox15.TabStop = false;
+            groupBox15.Text = "Panjang Reel";
+            // 
+            // txtPanjangReel
+            // 
+            txtPanjangReel.Location = new Point(6, 15);
+            txtPanjangReel.Name = "txtPanjangReel";
+            txtPanjangReel.ReadOnly = true;
+            txtPanjangReel.Size = new Size(407, 27);
+            txtPanjangReel.TabIndex = 0;
+            // 
+            // groupBox16
+            // 
+            groupBox16.Controls.Add(txtMasaPutar);
+            groupBox16.Location = new Point(516, 324);
+            groupBox16.Name = "groupBox16";
+            groupBox16.Size = new Size(419, 43);
+            groupBox16.TabIndex = 26;
+            groupBox16.TabStop = false;
+            groupBox16.Text = "Masa Putar";
+            // 
+            // txtMasaPutar
+            // 
+            txtMasaPutar.Location = new Point(6, 15);
+            txtMasaPutar.Name = "txtMasaPutar";
+            txtMasaPutar.ReadOnly = true;
+            txtMasaPutar.Size = new Size(407, 27);
+            txtMasaPutar.TabIndex = 0;
+            // 
+            // groupBox17
+            // 
+            groupBox17.Controls.Add(txtRak);
+            groupBox17.Location = new Point(516, 373);
+            groupBox17.Name = "groupBox17";
+            groupBox17.Size = new Size(419, 43);
+            groupBox17.TabIndex = 27;
+            groupBox17.TabStop = false;
+            groupBox17.Text = "Rak";
+            // 
+            // txtRak
+            // 
+            txtRak.Location = new Point(6, 15);
+            txtRak.Name = "txtRak";
+            txtRak.ReadOnly = true;
+            txtRak.Size = new Size(407, 27);
+            txtRak.TabIndex = 0;
+            // 
+            // groupBox18
+            // 
+            groupBox18.Controls.Add(txtCopy);
+            groupBox18.Location = new Point(516, 422);
+            groupBox18.Name = "groupBox18";
+            groupBox18.Size = new Size(419, 43);
+            groupBox18.TabIndex = 28;
+            groupBox18.TabStop = false;
+            groupBox18.Text = "Copy";
+            // 
+            // txtCopy
+            // 
+            txtCopy.Location = new Point(6, 15);
+            txtCopy.Name = "txtCopy";
+            txtCopy.ReadOnly = true;
+            txtCopy.Size = new Size(407, 27);
+            txtCopy.TabIndex = 0;
+            // 
+            // groupBox19
+            // 
+            groupBox19.Controls.Add(txtKeterangan);
+            groupBox19.Location = new Point(516, 475);
+            groupBox19.Name = "groupBox19";
+            groupBox19.Size = new Size(419, 43);
+            groupBox19.TabIndex = 29;
+            groupBox19.TabStop = false;
+            groupBox19.Text = "Keterangan";
+            // 
+            // txtKeterangan
+            // 
+            txtKeterangan.Location = new Point(6, 15);
+            txtKeterangan.Name = "txtKeterangan";
+            txtKeterangan.ReadOnly = true;
+            txtKeterangan.Size = new Size(407, 27);
+            txtKeterangan.TabIndex = 0;
+            // 
+            // dataGridViewSearchResults
+            // 
+            dataGridViewSearchResults.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewSearchResults.Location = new Point(80, 90);
+            dataGridViewSearchResults.Name = "dataGridViewSearchResults";
+            dataGridViewSearchResults.ReadOnly = true;
+            dataGridViewSearchResults.RowHeadersVisible = false;
+            dataGridViewSearchResults.RowHeadersWidth = 51;
+            dataGridViewSearchResults.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridViewSearchResults.Size = new Size(524, 219);
+            dataGridViewSearchResults.TabIndex = 14;
+            dataGridViewSearchResults.SelectionChanged += dataGridViewSearchResults_SelectionChanged;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(942, 50);
+            button3.Name = "button3";
+            button3.Size = new Size(131, 29);
+            button3.TabIndex = 30;
+            button3.Text = "Export to PDF";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
+            // Form1
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(1445, 1055);
+            Controls.Add(button3);
+            Controls.Add(dataGridViewSearchResults);
+            Controls.Add(groupBox19);
+            Controls.Add(groupBox18);
+            Controls.Add(groupBox17);
+            Controls.Add(groupBox16);
+            Controls.Add(groupBox15);
+            Controls.Add(groupBox14);
+            Controls.Add(groupBox13);
+            Controls.Add(groupBox12);
+            Controls.Add(groupBox11);
+            Controls.Add(groupBox9);
+            Controls.Add(groupBox8);
+            Controls.Add(groupBox7);
+            Controls.Add(groupBox6);
+            Controls.Add(groupBox5);
+            Controls.Add(groupBox4);
+            Controls.Add(groupBox3);
+            Controls.Add(btnDelete);
+            Controls.Add(btnUpdate);
+            Controls.Add(btnAdd);
+            Controls.Add(button1);
+            Controls.Add(pictureBox1);
+            Name = "Form1";
+            Text = "Data Sinematek";
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
+            groupBox5.ResumeLayout(false);
+            groupBox5.PerformLayout();
+            groupBox6.ResumeLayout(false);
+            groupBox6.PerformLayout();
+            groupBox7.ResumeLayout(false);
+            groupBox7.PerformLayout();
+            groupBox8.ResumeLayout(false);
+            groupBox8.PerformLayout();
+            groupBox9.ResumeLayout(false);
+            groupBox9.PerformLayout();
+            groupBox11.ResumeLayout(false);
+            groupBox11.PerformLayout();
+            groupBox12.ResumeLayout(false);
+            groupBox12.PerformLayout();
+            groupBox13.ResumeLayout(false);
+            groupBox13.PerformLayout();
+            groupBox14.ResumeLayout(false);
+            groupBox14.PerformLayout();
+            groupBox15.ResumeLayout(false);
+            groupBox15.PerformLayout();
+            groupBox16.ResumeLayout(false);
+            groupBox16.PerformLayout();
+            groupBox17.ResumeLayout(false);
+            groupBox17.PerformLayout();
+            groupBox18.ResumeLayout(false);
+            groupBox18.PerformLayout();
+            groupBox19.ResumeLayout(false);
+            groupBox19.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridViewSearchResults).EndInit();
+            ResumeLayout(false);
+        }
+
+        private PictureBox pictureBox1;
+        private Button button1;
+        private Button btnAdd;
+        private Button btnUpdate;
+        private Button btnDelete;
+        private GroupBox groupBox3;
+        private GroupBox groupBox4;
+        private GroupBox groupBox5;
+        private GroupBox groupBox6;
+        private GroupBox groupBox7;
+        private GroupBox groupBox8;
+        private GroupBox groupBox9;
+        private TextBox txtSearchLeft;
+        private DataGridView dataGridViewSearchResults;
+        private TextBox txtNoPenempatan;
+        private TextBox txtJudulFilm;
+        private TextBox txtProduksi;
+        private TextBox txtTahunProduksi;
+        private TextBox txtNegara;
+        private TextBox txtBahasa;
+        private GroupBox groupBox11;
+        private GroupBox groupBox12;
+        private GroupBox groupBox13;
+        private GroupBox groupBox14;
+        private GroupBox groupBox15;
+        private GroupBox groupBox16;
+        private GroupBox groupBox17;
+        private GroupBox groupBox18;
+        private GroupBox groupBox19;
+        private TextBox txtWarna;
+        private TextBox txtJenisFilm;
+        private TextBox txtUkuranReel;
+        private TextBox txtJumlahReel;
+        private TextBox txtPanjangReel;
+        private TextBox txtMasaPutar;
+        private TextBox txtRak;
+        private TextBox txtCopy;
+        private TextBox txtKeterangan;
+        private Button button3;
+    }
+}
