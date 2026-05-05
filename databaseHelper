@@ -1,0 +1,279 @@
+using System.Data.OleDb;
+
+namespace Sinematek_Foto_Poster
+{
+    public static class DatabaseHelper
+    {
+        private const string ConnectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=D:\\Documents\\Database1.accdb;Jet OLEDB:Database Password=;";
+
+        public static List<(string recordId, string noPenempatan, string judulFilm, string produksi, int tahunProduksi, string poster, string negara, string bahasa, string warna, string jenisFilm, string ukuranReel, string jumlahReel, string panjangReel, string masaPutar, string rak, string copy, string keterangan)> GetAllFilms()
+        {
+            var films = new List<(string, string, string, string, int, string, string, string, string, string, string, string, string, string, string, string, string)>();
+            using (var connection = new OleDbConnection(ConnectionString))
+            {
+                connection.Open();
+                var query = "SELECT [no], [NO_PENEMPATAN], [JUDUL_FILM], [PRODUKSI], [TAHUN_PRODUKSI], [Poster], [NEGARA], [BAHASA], [WARNA], [JENIS_FILM], [UKURAN_REEL_MM], [JUMLAH_REEL], [PANJANG_REEL_FT], [MASA_PUTAR_S], [RAK], [COPY], [KETERANGAN] FROM [FilmStorage_Poster] ORDER BY [NO_PENEMPATAN]";
+                using (var command = new OleDbCommand(query, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string recordId = reader.IsDBNull(0) ? "" : reader[0].ToString() ?? "";
+                            string noPenempatan = reader.IsDBNull(1) ? "" : reader[1].ToString() ?? "";
+                            string judulFilm = reader.IsDBNull(2) ? "" : reader[2].ToString() ?? "";
+                            string produksi = reader.IsDBNull(3) ? "" : reader[3].ToString() ?? "";
+                            int tahunProduksi = reader.IsDBNull(4) ? 0 : Convert.ToInt32(reader[4]);
+                            string poster = reader.IsDBNull(5) ? "" : reader[5].ToString() ?? "";
+                            string negara = reader.IsDBNull(6) ? "" : reader[6].ToString() ?? "";
+                            string bahasa = reader.IsDBNull(7) ? "" : reader[7].ToString() ?? "";
+                            string warna = reader.IsDBNull(8) ? "" : reader[8].ToString() ?? "";
+                            string jenisFilm = reader.IsDBNull(9) ? "" : reader[9].ToString() ?? "";
+                            string ukuranReel = reader.IsDBNull(10) ? "" : reader[10].ToString() ?? "";
+                            string jumlahReel = reader.IsDBNull(11) ? "" : reader[11].ToString() ?? "";
+                            string panjangReel = reader.IsDBNull(12) ? "" : reader[12].ToString() ?? "";
+                            string masaPutar = reader.IsDBNull(13) ? "" : reader[13].ToString() ?? "";
+                            string rak = reader.IsDBNull(14) ? "" : reader[14].ToString() ?? "";
+                            string copy = reader.IsDBNull(15) ? "" : reader[15].ToString() ?? "";
+                            string keterangan = reader.IsDBNull(16) ? "" : reader[16].ToString() ?? "";
+                            films.Add((recordId, noPenempatan, judulFilm, produksi, tahunProduksi, poster, negara, bahasa, warna, jenisFilm, ukuranReel, jumlahReel, panjangReel, masaPutar, rak, copy, keterangan));
+                        }
+                    }
+                }
+            }
+            return films;
+        }
+
+        public static List<(string recordId, string noPenempatan, string judulFilm, string produksi, int tahunProduksi, string poster, string negara, string bahasa, string warna, string jenisFilm, string ukuranReel, string jumlahReel, string panjangReel, string masaPutar, string rak, string copy, string keterangan)> SearchFilmsLike(string judulFilm)
+        {
+            var films = new List<(string, string, string, string, int, string, string, string, string, string, string, string, string, string, string, string, string)>();
+            using (var connection = new OleDbConnection(ConnectionString))
+            {
+                connection.Open();
+                var query = "SELECT [no], [NO_PENEMPATAN], [JUDUL_FILM], [PRODUKSI], [TAHUN_PRODUKSI], [Poster], [NEGARA], [BAHASA], [WARNA], [JENIS_FILM], [UKURAN_REEL_MM], [JUMLAH_REEL], [PANJANG_REEL_FT], [MASA_PUTAR_S], [RAK], [COPY], [KETERANGAN] FROM [FilmStorage_Poster] WHERE [JUDUL_FILM] LIKE '%' & @judulFilm & '%' ORDER BY [NO_PENEMPATAN]";
+                using (var command = new OleDbCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@judulFilm", judulFilm);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string recordId = reader.IsDBNull(0) ? "" : reader[0].ToString() ?? "";
+                            string noPenempatan = reader.IsDBNull(1) ? "" : reader[1].ToString() ?? "";
+                            string jf = reader.IsDBNull(2) ? "" : reader[2].ToString() ?? "";
+                            string produksi = reader.IsDBNull(3) ? "" : reader[3].ToString() ?? "";
+                            int tahunProduksi = reader.IsDBNull(4) ? 0 : Convert.ToInt32(reader[4]);
+                            string poster = reader.IsDBNull(5) ? "" : reader[5].ToString() ?? "";
+                            string negara = reader.IsDBNull(6) ? "" : reader[6].ToString() ?? "";
+                            string bahasa = reader.IsDBNull(7) ? "" : reader[7].ToString() ?? "";
+                            string warna = reader.IsDBNull(8) ? "" : reader[8].ToString() ?? "";
+                            string jenisFilm = reader.IsDBNull(9) ? "" : reader[9].ToString() ?? "";
+                            string ukuranReel = reader.IsDBNull(10) ? "" : reader[10].ToString() ?? "";
+                            string jumlahReel = reader.IsDBNull(11) ? "" : reader[11].ToString() ?? "";
+                            string panjangReel = reader.IsDBNull(12) ? "" : reader[12].ToString() ?? "";
+                            string masaPutar = reader.IsDBNull(13) ? "" : reader[13].ToString() ?? "";
+                            string rak = reader.IsDBNull(14) ? "" : reader[14].ToString() ?? "";
+                            string copy = reader.IsDBNull(15) ? "" : reader[15].ToString() ?? "";
+                            string keterangan = reader.IsDBNull(16) ? "" : reader[16].ToString() ?? "";
+                            films.Add((recordId, noPenempatan, jf, produksi, tahunProduksi, poster, negara, bahasa, warna, jenisFilm, ukuranReel, jumlahReel, panjangReel, masaPutar, rak, copy, keterangan));
+                        }
+                    }
+                }
+            }
+            return films;
+        }
+
+        public static (string recordId, string noPenempatan, string judulFilm, string produksi, int tahunProduksi, string poster, string negara, string bahasa, string warna, string jenisFilm, string ukuranReel, string jumlahReel, string panjangReel, string masaPutar, string rak, string copy, string keterangan)? SearchFilmsExact(string judulFilm, string recordId)
+        {
+            if (string.IsNullOrWhiteSpace(judulFilm))
+                return null;
+
+            using (var connection = new OleDbConnection(ConnectionString))
+            {
+                connection.Open();
+                string query;
+                OleDbCommand command;
+
+                if (!string.IsNullOrWhiteSpace(recordId))
+                {
+                    query = "SELECT [no], [NO_PENEMPATAN], [JUDUL_FILM], [PRODUKSI], [TAHUN_PRODUKSI], [Poster], [NEGARA], [BAHASA], [WARNA], [JENIS_FILM], [UKURAN_REEL_MM], [JUMLAH_REEL], [PANJANG_REEL_FT], [MASA_PUTAR_S], [RAK], [COPY], [KETERANGAN] FROM [FilmStorage_Poster] WHERE [no] = @recordId AND [JUDUL_FILM] = @judulFilm";
+                    command = new OleDbCommand(query, connection);
+                    command.Parameters.AddWithValue("@recordId", recordId);
+                    command.Parameters.AddWithValue("@judulFilm", judulFilm);
+                }
+                else
+                {
+                    query = "SELECT [no], [NO_PENEMPATAN], [JUDUL_FILM], [PRODUKSI], [TAHUN_PRODUKSI], [Poster], [NEGARA], [BAHASA], [WARNA], [JENIS_FILM], [UKURAN_REEL_MM], [JUMLAH_REEL], [PANJANG_REEL_FT], [MASA_PUTAR_S], [RAK], [COPY], [KETERANGAN] FROM [FilmStorage_Poster] WHERE [JUDUL_FILM] = @judulFilm";
+                    command = new OleDbCommand(query, connection);
+                    command.Parameters.AddWithValue("@judulFilm", judulFilm);
+                }
+
+                using (command)
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string recordIdResult = reader.IsDBNull(0) ? "" : reader[0].ToString() ?? "";
+                            string no = reader.IsDBNull(1) ? "" : reader[1].ToString() ?? "";
+                            string jf = reader.IsDBNull(2) ? "" : reader[2].ToString() ?? "";
+                            string produksi = reader.IsDBNull(3) ? "" : reader[3].ToString() ?? "";
+                            int tahunProduksi = reader.IsDBNull(4) ? 0 : Convert.ToInt32(reader[4]);
+                            string poster = reader.IsDBNull(5) ? "" : reader[5].ToString() ?? "";
+                            string negara = reader.IsDBNull(6) ? "" : reader[6].ToString() ?? "";
+                            string bahasa = reader.IsDBNull(7) ? "" : reader[7].ToString() ?? "";
+                            string warna = reader.IsDBNull(8) ? "" : reader[8].ToString() ?? "";
+                            string jenisFilm = reader.IsDBNull(9) ? "" : reader[9].ToString() ?? "";
+                            string ukuranReel = reader.IsDBNull(10) ? "" : reader[10].ToString() ?? "";
+                            string jumlahReel = reader.IsDBNull(11) ? "" : reader[11].ToString() ?? "";
+                            string panjangReel = reader.IsDBNull(12) ? "" : reader[12].ToString() ?? "";
+                            string masaPutar = reader.IsDBNull(13) ? "" : reader[13].ToString() ?? "";
+                            string rak = reader.IsDBNull(14) ? "" : reader[14].ToString() ?? "";
+                            string copy = reader.IsDBNull(15) ? "" : reader[15].ToString() ?? "";
+                            string keterangan = reader.IsDBNull(16) ? "" : reader[16].ToString() ?? "";
+                            return (recordIdResult, no, jf, produksi, tahunProduksi, poster, negara, bahasa, warna, jenisFilm, ukuranReel, jumlahReel, panjangReel, masaPutar, rak, copy, keterangan);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static (string recordId, string noPenempatan, string judulFilm, string produksi, int tahunProduksi, string poster, string negara, string bahasa, string warna, string jenisFilm, string ukuranReel, string jumlahReel, string panjangReel, string masaPutar, string rak, string copy, string keterangan)? SearchFilmsExact(string judulFilm, string recordId, int? tahunProduksi)
+        {
+            if (string.IsNullOrWhiteSpace(judulFilm))
+                return null;
+
+            using (var connection = new OleDbConnection(ConnectionString))
+            {
+                connection.Open();
+                string query;
+                OleDbCommand command;
+
+                if (!string.IsNullOrWhiteSpace(recordId))
+                {
+                    query = "SELECT [no], [NO_PENEMPATAN], [JUDUL_FILM], [PRODUKSI], [TAHUN_PRODUKSI], [Poster], [NEGARA], [BAHASA], [WARNA], [JENIS_FILM], [UKURAN_REEL_MM], [JUMLAH_REEL], [PANJANG_REEL_FT], [MASA_PUTAR_S], [RAK], [COPY], [KETERANGAN] FROM [FilmStorage_Poster] WHERE [no] = @recordId AND [JUDUL_FILM] = @judulFilm";
+                    command = new OleDbCommand(query, connection);
+                    command.Parameters.AddWithValue("@recordId", recordId);
+                    command.Parameters.AddWithValue("@judulFilm", judulFilm);
+                }
+                else if (tahunProduksi.HasValue)
+                {
+                    query = "SELECT [no], [NO_PENEMPATAN], [JUDUL_FILM], [PRODUKSI], [TAHUN_PRODUKSI], [Poster], [NEGARA], [BAHASA], [WARNA], [JENIS_FILM], [UKURAN_REEL_MM], [JUMLAH_REEL], [PANJANG_REEL_FT], [MASA_PUTAR_S], [RAK], [COPY], [KETERANGAN] FROM [FilmStorage_Poster] WHERE [JUDUL_FILM] = @judulFilm AND [TAHUN_PRODUKSI] = @tahunProduksi";
+                    command = new OleDbCommand(query, connection);
+                    command.Parameters.AddWithValue("@judulFilm", judulFilm);
+                    command.Parameters.AddWithValue("@tahunProduksi", tahunProduksi.Value);
+                }
+                else
+                {
+                    query = "SELECT [no], [NO_PENEMPATAN], [JUDUL_FILM], [PRODUKSI], [TAHUN_PRODUKSI], [Poster], [NEGARA], [BAHASA], [WARNA], [JENIS_FILM], [UKURAN_REEL_MM], [JUMLAH_REEL], [PANJANG_REEL_FT], [MASA_PUTAR_S], [RAK], [COPY], [KETERANGAN] FROM [FilmStorage_Poster] WHERE [JUDUL_FILM] = @judulFilm";
+                    command = new OleDbCommand(query, connection);
+                    command.Parameters.AddWithValue("@judulFilm", judulFilm);
+                }
+
+                using (command)
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            string recordIdResult = reader.IsDBNull(0) ? "" : reader[0].ToString() ?? "";
+                            string no = reader.IsDBNull(1) ? "" : reader[1].ToString() ?? "";
+                            string jf = reader.IsDBNull(2) ? "" : reader[2].ToString() ?? "";
+                            string produksi = reader.IsDBNull(3) ? "" : reader[3].ToString() ?? "";
+                            int tp = reader.IsDBNull(4) ? 0 : Convert.ToInt32(reader[4]);
+                            string poster = reader.IsDBNull(5) ? "" : reader[5].ToString() ?? "";
+                            string negara = reader.IsDBNull(6) ? "" : reader[6].ToString() ?? "";
+                            string bahasa = reader.IsDBNull(7) ? "" : reader[7].ToString() ?? "";
+                            string warna = reader.IsDBNull(8) ? "" : reader[8].ToString() ?? "";
+                            string jenisFilm = reader.IsDBNull(9) ? "" : reader[9].ToString() ?? "";
+                            string ukuranReel = reader.IsDBNull(10) ? "" : reader[10].ToString() ?? "";
+                            string jumlahReel = reader.IsDBNull(11) ? "" : reader[11].ToString() ?? "";
+                            string panjangReel = reader.IsDBNull(12) ? "" : reader[12].ToString() ?? "";
+                            string masaPutar = reader.IsDBNull(13) ? "" : reader[13].ToString() ?? "";
+                            string rak = reader.IsDBNull(14) ? "" : reader[14].ToString() ?? "";
+                            string copy = reader.IsDBNull(15) ? "" : reader[15].ToString() ?? "";
+                            string keterangan = reader.IsDBNull(16) ? "" : reader[16].ToString() ?? "";
+                            return (recordIdResult, no, jf, produksi, tp, poster, negara, bahasa, warna, jenisFilm, ukuranReel, jumlahReel, panjangReel, masaPutar, rak, copy, keterangan);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static void AddFilm(string noPenempatan, string judulFilm, string produksi, string tahunProduksi, string poster, string negara, string bahasa, string warna, string jenisFilm, string ukuranReel, string jumlahReel, string panjangReel, string masaPutar, string rak, string copy, string keterangan)
+        {
+            using (var connection = new OleDbConnection(ConnectionString))
+            {
+                connection.Open();
+                var query = "INSERT INTO [FilmStorage_Poster] ([NO_PENEMPATAN], [JUDUL_FILM], [PRODUKSI], [TAHUN_PRODUKSI], [Poster], [NEGARA], [BAHASA], [WARNA], [JENIS_FILM], [UKURAN_REEL_MM], [JUMLAH_REEL], [PANJANG_REEL_FT], [MASA_PUTAR_S], [RAK], [COPY], [KETERANGAN]) VALUES (@noPenempatan, @judulFilm, @produksi, @tahunProduksi, @poster, @negara, @bahasa, @warna, @jenisFilm, @ukuranReel, @jumlahReel, @panjangReel, @masaPutar, @rak, @copy, @keterangan)";
+                using (var command = new OleDbCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@noPenempatan", noPenempatan);
+                    command.Parameters.AddWithValue("@judulFilm", judulFilm);
+                    command.Parameters.AddWithValue("@produksi", produksi);
+                    command.Parameters.AddWithValue("@tahunProduksi", tahunProduksi);
+                    command.Parameters.AddWithValue("@poster", poster);
+                    command.Parameters.AddWithValue("@negara", negara);
+                    command.Parameters.AddWithValue("@bahasa", bahasa);
+                    command.Parameters.AddWithValue("@warna", warna);
+                    command.Parameters.AddWithValue("@jenisFilm", jenisFilm);
+                    command.Parameters.AddWithValue("@ukuranReel", ukuranReel);
+                    command.Parameters.AddWithValue("@jumlahReel", jumlahReel);
+                    command.Parameters.AddWithValue("@panjangReel", panjangReel);
+                    command.Parameters.AddWithValue("@masaPutar", masaPutar);
+                    command.Parameters.AddWithValue("@rak", rak);
+                    command.Parameters.AddWithValue("@copy", copy);
+                    command.Parameters.AddWithValue("@keterangan", keterangan);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void UpdateFilm(string oldRecordId, string noPenempatan, string judulFilm, string produksi, string tahunProduksi, string poster, string negara, string bahasa, string warna, string jenisFilm, string ukuranReel, string jumlahReel, string panjangReel, string masaPutar, string rak, string copy, string keterangan)
+        {
+            using (var connection = new OleDbConnection(ConnectionString))
+            {
+                connection.Open();
+                var query = "UPDATE [FilmStorage_Poster] SET [NO_PENEMPATAN] = @noPenempatan, [JUDUL_FILM] = @judulFilm, [PRODUKSI] = @produksi, [TAHUN_PRODUKSI] = @tahunProduksi, [Poster] = @poster, [NEGARA] = @negara, [BAHASA] = @bahasa, [WARNA] = @warna, [JENIS_FILM] = @jenisFilm, [UKURAN_REEL_MM] = @ukuranReel, [JUMLAH_REEL] = @jumlahReel, [PANJANG_REEL_FT] = @panjangReel, [MASA_PUTAR_S] = @masaPutar, [RAK] = @rak, [COPY] = @copy, [KETERANGAN] = @keterangan WHERE [no] = @oldRecordId";
+                using (var command = new OleDbCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@noPenempatan", noPenempatan);
+                    command.Parameters.AddWithValue("@judulFilm", judulFilm);
+                    command.Parameters.AddWithValue("@produksi", produksi);
+                    command.Parameters.AddWithValue("@tahunProduksi", tahunProduksi);
+                    command.Parameters.AddWithValue("@poster", poster);
+                    command.Parameters.AddWithValue("@negara", negara);
+                    command.Parameters.AddWithValue("@bahasa", bahasa);
+                    command.Parameters.AddWithValue("@warna", warna);
+                    command.Parameters.AddWithValue("@jenisFilm", jenisFilm);
+                    command.Parameters.AddWithValue("@ukuranReel", ukuranReel);
+                    command.Parameters.AddWithValue("@jumlahReel", jumlahReel);
+                    command.Parameters.AddWithValue("@panjangReel", panjangReel);
+                    command.Parameters.AddWithValue("@masaPutar", masaPutar);
+                    command.Parameters.AddWithValue("@rak", rak);
+                    command.Parameters.AddWithValue("@copy", copy);
+                    command.Parameters.AddWithValue("@keterangan", keterangan);
+                    command.Parameters.AddWithValue("@oldRecordId", oldRecordId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static void DeleteFilm(string recordId)
+        {
+            using (var connection = new OleDbConnection(ConnectionString))
+            {
+                connection.Open();
+                var query = "DELETE FROM [FilmStorage_Poster] WHERE [no] = @recordId";
+                using (var command = new OleDbCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@recordId", recordId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+        
+    }
+}
