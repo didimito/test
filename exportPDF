@@ -1,0 +1,328 @@
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
+using System.Runtime.InteropServices;
+using PdfSharpCore.Pdf;
+using PdfSharpCore.Drawing;
+
+namespace Sinematek_Foto_Poster
+{
+    public static class PdfExporter
+    {
+        // --- Existing multi-page A4 exporter (scale-to-fit A4 width, slice vertically) ---
+        public static void ExportBitmapToA4Pdf(Bitmap bmp, string pdfPath, Color backgroundColor, int tolerance = 24)
+        {
+            if (bmp == null) throw new ArgumentNullException(nameof(bmp));
+            if (string.IsNullOrEmpty(pdfPath)) throw new ArgumentNullException(nameof(pdfPath));
+
+            // Ensure 32bpp ARGB for alpha operations
+            using (var working = new Bitmap(bmp.Width, bmp.Height, PixelFormat.Format32bppArgb))
+            {
+                using (var g = Graphics.FromImage(working))
+                {
+                    g.Clear(Color.Transparent);
+                    g.DrawImageUnscaled(bmp, 0, 0);
+                }
+
+                ApplySmoothTransparency(working, backgroundColor, tolerance);
+
+                // Image DPI (fallback to 96 if invalid)
+                float imgDpiX = working.HorizontalResolution > 0 ? working.HorizontalResolution : 96f;
+                float imgDpiY = working.VerticalResolution > 0 ? working.VerticalResolution : 96f;
+
+                // A4 in inches
+                const double A4WidthInInch = 210.0 / 25.4;
+                const double A4HeightInInch = 297.0 / 25.4;
+
+                // page size in pixels at image DPI
+                int a4PixelWidth = (int)Math.Round(A4WidthInInch * imgDpiX);
+                int a4PixelHeight = (int)Math.Round(A4HeightInInch * imgDpiY);
+
+                // --- Scale working image to fit A4 width if needed ---
+                double scale = 1.0;
+                if (working.Width > a4PixelWidth)
+                    scale = (double)a4PixelWidth / working.Width;
+
+                Bitmap scaled;
+                if (Math.Abs(scale - 1.0) < 1e-6)
+                {
+                    scaled = working; // no scaling
+                }
+                else
+                {
+                    int scaledWidth = (int)Math.Round(working.Width * scale);
+                    int scaledHeight = (int)Math.Round(working.Height * scale);
+                    scaled = new Bitmap(scaledWidth, scaledHeight, PixelFormat.Format32bppArgb);
+                    scaled.SetResolution(imgDpiX, imgDpiY);
+                    using (var gg = Graphics.FromImage(scaled))
+                    {
+                        gg.Clear(Color.Transparent);
+                        gg.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                        gg.DrawImage(working, new Rectangle(0, 0, scaledWidth, scaledHeight),
+                                     new Rectangle(0, 0, working.Width, working.Height), GraphicsUnit.Pixel);
+                    }
+                }
+
+                // --- Slice scaled image vertically into A4-height strips and write PDF ---
+                using (var doc = new PdfDocument())
+                {
+                    int pagePixelHeight = a4PixelHeight; // pixels per A4 page height at image DPI
+
+                    // A4 in points for PDF page sizing
+                    double a4WidthPoints = A4WidthInInch * 72.0;
+                    double a4HeightPoints = A4HeightInInch * 72.0;
+
+                    for (int y = 0; y < scaled.Height; y += pagePixelHeight)
+                    {
+                        int sliceHeight = Math.Min(pagePixelHeight, scaled.Height - y);
+
+                        using (var slice = new Bitmap(scaled.Width, sliceHeight, PixelFormat.Format32bppArgb))
+                        using (var sg = Graphics.FromImage(slice))
+                        {
+                            sg.Clear(Color.Transparent);
+                            var srcRect = new Rectangle(0, y, scaled.Width, sliceHeight);
+                            var dstRect = new Rectangle(0, 0, scaled.Width, sliceHeight);
+                            sg.DrawImage(scaled, dstRect, srcRect, GraphicsUnit.Pixel);
+
+                            // preserve DPI
+                            slice.SetResolution(imgDpiX, imgDpiY);
+
+                            using (var ms = new MemoryStream())
+                            {
+                                slice.Save(ms, ImageFormat.Png);
+                                ms.Position = 0;
+
+                                var page = doc.AddPage();
+                                page.Size = PdfSharpCore.PageSize.A4;
+                                page.Orientation = PdfSharpCore.PageOrientation.Landscape;
+                                // (Optional) keep explicit Width/Height in points if you use them later:
+                                page.Width = XUnit.FromPoint(A4HeightInInch * 72.0);   // landscape: width = portrait height
+                                page.Height = XUnit.FromPoint(A4WidthInInch * 72.0);
+
+                                using (var gfx = XGraphics.FromPdfPage(page))
+                                {
+                                    var xImg = XImage.FromStream(() => ms);
+
+                                    // Compute destination height (in points) to preserve aspect ratio:
+                                    double destHeightPoints = sliceHeight * 72.0 / imgDpiY;
+                                    double destWidthPoints = a4WidthPoints;
+
+                                    // Vertically center the slice on the page
+                                    double topOffsetPoints = Math.Max(0, (a4HeightPoints - destHeightPoints) / 2.0);
+
+                                    gfx.DrawImage(xImg,
+                                                  XUnit.FromPoint(0),
+                                                  XUnit.FromPoint(topOffsetPoints),
+                                                  XUnit.FromPoint(destWidthPoints),
+                                                  XUnit.FromPoint(destHeightPoints));
+                                }
+                            }
+                        }
+                    }
+
+                    // ensure directory exists
+                    var dir = Path.GetDirectoryName(pdfPath);
+                    if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
+
+                    using (var fs = File.Open(pdfPath, FileMode.Create, FileAccess.Write))
+                    {
+                        doc.Save(fs);
+                    }
+                }
+
+                // Dispose scaled if it's a separate instance
+                if (!ReferenceEquals(scaled, working))
+                    scaled.Dispose();
+            }
+        }
+
+        // --- Single-page A4 landscape exporter (fits entire form to one landscape A4 page) ---
+        public static void ExportBitmapToSingleA4LandscapePdf(Bitmap bmp, string pdfPath, Color backgroundColor, int tolerance = 24)
+        {
+            if (bmp == null) throw new ArgumentNullException(nameof(bmp));
+            if (string.IsNullOrEmpty(pdfPath)) throw new ArgumentNullException(nameof(pdfPath));
+
+            // Prepare working bitmap in 32bpp ARGB so transparency operations are safe
+            using (var working = new Bitmap(bmp.Width, bmp.Height, PixelFormat.Format32bppArgb))
+            {
+                using (var g = Graphics.FromImage(working))
+                {
+                    g.Clear(Color.Transparent);
+                    g.DrawImageUnscaled(bmp, 0, 0);
+                }
+
+                // Optional: keep smooth transparency step if you want to remove backgroundColor
+                ApplySmoothTransparency(working, backgroundColor, tolerance);
+
+                // Image DPI (fallback to 96 if invalid)
+                float imgDpiX = working.HorizontalResolution > 0 ? working.HorizontalResolution : 96f;
+                float imgDpiY = working.VerticalResolution > 0 ? working.VerticalResolution : 96f;
+
+                // A4 dimensions in inches
+                const double A4WidthInInch = 210.0 / 25.4;   // 210mm
+                const double A4HeightInInch = 297.0 / 25.4;  // 297mm
+
+                // For landscape swap width/height: landscape width = A4 height in portrait (297mm)
+                double pageWidthInch = A4HeightInInch;
+                double pageHeightInch = A4WidthInInch;
+
+                // Page size in points (1 point = 1/72 inch)
+                double pageWidthPoints = pageWidthInch * 72.0;
+                double pageHeightPoints = pageHeightInch * 72.0;
+
+                // Page size in pixels at image DPI (to compute scale)
+                int pagePixelWidth = (int)Math.Round(pageWidthInch * imgDpiX);
+                int pagePixelHeight = (int)Math.Round(pageHeightInch * imgDpiY);
+
+                // Compute uniform scale so the working image fits inside the page box (width and height)
+                double scaleX = (double)pagePixelWidth / working.Width;
+                double scaleY = (double)pagePixelHeight / working.Height;
+                double scale = Math.Min(scaleX, scaleY);
+                if (scale > 1.0) scale = 1.0; // do not upscale (optional)
+
+                // Compute scaled dimensions in pixels
+                int scaledWidth = (int)Math.Round(working.Width * scale);
+                int scaledHeight = (int)Math.Round(working.Height * scale);
+
+                // Create scaled bitmap
+                using (var scaled = new Bitmap(scaledWidth, scaledHeight, PixelFormat.Format32bppArgb))
+                {
+                    scaled.SetResolution(imgDpiX, imgDpiY);
+                    using (var sg = Graphics.FromImage(scaled))
+                    {
+                        sg.Clear(Color.Transparent);
+                        sg.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                        sg.DrawImage(working, new Rectangle(0, 0, scaledWidth, scaledHeight),
+                                     new Rectangle(0, 0, working.Width, working.Height), GraphicsUnit.Pixel);
+                    }
+
+                    // Save single-page PDF (A4 landscape)
+                    using (var doc = new PdfDocument())
+                    {
+                        var page = doc.AddPage();
+                        page.Size = PdfSharpCore.PageSize.A4;
+                        page.Orientation = PdfSharpCore.PageOrientation.Landscape;
+                        // set explicit points if needed
+                        page.Width = XUnit.FromPoint(pageWidthPoints);
+                        page.Height = XUnit.FromPoint(pageHeightPoints);
+
+                        using (var ms = new MemoryStream())
+                        {
+                            scaled.Save(ms, ImageFormat.Png);
+                            ms.Position = 0;
+
+                            using (var gfx = XGraphics.FromPdfPage(page))
+                            {
+                                var ximg = XImage.FromStream(() => ms);
+
+                                // Destination size in points (preserve aspect ratio):
+                                double destWidthPoints = scaledWidth * 72.0 / imgDpiX;
+                                double destHeightPoints = scaledHeight * 72.0 / imgDpiY;
+
+                                // Center image on page
+                                double leftPoints = (pageWidthPoints - destWidthPoints) / 2.0;
+                                double topPoints = (pageHeightPoints - destHeightPoints) / 2.0;
+
+                                gfx.DrawImage(ximg,
+                                              XUnit.FromPoint(leftPoints),
+                                              XUnit.FromPoint(topPoints),
+                                              XUnit.FromPoint(destWidthPoints),
+                                              XUnit.FromPoint(destHeightPoints));
+                            }
+                        }
+
+                        // Ensure directory exists
+                        var dir = Path.GetDirectoryName(pdfPath);
+                        if (!string.IsNullOrEmpty(dir)) Directory.CreateDirectory(dir);
+
+                        using (var fs = File.Open(pdfPath, FileMode.Create, FileAccess.Write))
+                        {
+                            doc.Save(fs);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Safe (non-unsafe) smooth alpha conversion: maps pixels close to backgroundColor to transparent.
+        // tolerance: 0..~255 (try 12..36). Higher tolerance widens the falloff.
+        private static void ApplySmoothTransparency(Bitmap bmp, Color backgroundColor, int tolerance)
+        {
+            if (bmp == null) throw new ArgumentNullException(nameof(bmp));
+
+            var rect = new Rectangle(0, 0, bmp.Width, bmp.Height);
+            var bd = bmp.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+            try
+            {
+                int bytes = Math.Abs(bd.Stride) * bd.Height;
+                var buffer = new byte[bytes];
+                Marshal.Copy(bd.Scan0, buffer, 0, bytes);
+
+                if (tolerance <= 0)
+                {
+                    // exact match using buffer (fast)
+                    for (int yy = 0; yy < bd.Height; yy++)
+                    {
+                        int rowStart = yy * bd.Stride;
+                        for (int xx = 0; xx < bd.Width; xx++)
+                        {
+                            int idx = rowStart + xx * 4;
+                            byte b = buffer[idx + 0];
+                            byte g = buffer[idx + 1];
+                            byte r = buffer[idx + 2];
+
+                            if (r == backgroundColor.R && g == backgroundColor.G && b == backgroundColor.B)
+                            {
+                                buffer[idx + 3] = 0;
+                            }
+                        }
+                    }
+
+                    Marshal.Copy(buffer, 0, bd.Scan0, bytes);
+                    return;
+                }
+
+                double outer = Math.Max(1, tolerance);
+                double inner = outer / 3.0;
+
+                // Parallelize by rows for better throughput on large images
+                System.Threading.Tasks.Parallel.For(0, bd.Height, yy =>
+                {
+                    int rowStart = yy * bd.Stride;
+                    for (int xx = 0; xx < bd.Width; xx++)
+                    {
+                        int idx = rowStart + xx * 4;
+                        byte b = buffer[idx + 0];
+                        byte g = buffer[idx + 1];
+                        byte r = buffer[idx + 2];
+                        byte a = buffer[idx + 3];
+
+                        int dr = r - backgroundColor.R;
+                        int dg = g - backgroundColor.G;
+                        int db = b - backgroundColor.B;
+                        double dist = Math.Sqrt(dr * dr + dg * dg + db * db);
+
+                        if (dist <= inner)
+                        {
+                            buffer[idx + 3] = 0;
+                        }
+                        else if (dist < outer)
+                        {
+                            double t = (dist - inner) / (outer - inner); // 0..1
+                            byte newA = (byte)Math.Round(a * t);
+                            buffer[idx + 3] = newA;
+                        }
+                        // else keep original alpha
+                    }
+                });
+
+                Marshal.Copy(buffer, 0, bd.Scan0, bytes);
+            }
+            finally
+            {
+                bmp.UnlockBits(bd);
+            }
+        }
+    }
+}
